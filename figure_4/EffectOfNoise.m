@@ -14,7 +14,6 @@ eta=1.8e10;
 %% Effective coupling
 alpha=1.*4.*pi.^2.*2.358e-5;%1.8
 %% Parametric drive strength
-% epsilon=0.01;%0
 epsilon=input('Parametric drive strength (provide 0 or 0.01) =  ')
 %% Thermalnoise strength
 Fth=5e-2;
@@ -85,7 +84,6 @@ function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
   n_matrix=[0 1 0 1];
   Fth = Fth.*n_matrix;
   Fadd = epsilon_p.*n_matrix;
-%   st=sqrt(dt).*Fadd.*randn(N+1,1)*1;
   st=sqrt(dt).*Fth.*randn(N+1,1)+sqrt(dt).*Fadd.*randn(N+1,1);
 
   for i=1:N
@@ -97,8 +95,8 @@ function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
       y = y + (k1+2*k2+2*k3+k4)/6+ st(i,:)';
       t = t + dt;
     
-      ts(i+1) = t; ys(i+1,:) = y';   % store y(1),y(2) in row of array ys
-%       var(i)=k1(2);%st(i,2);
+      ts(i+1) = t; ys(i+1,:) = y';  
+
   end
     % frequency
     Fs=1/dt;
