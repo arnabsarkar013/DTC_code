@@ -12,14 +12,14 @@ gammag=2.*pi.*22037;
 beta=5.8e15;
 eta=1.8e10; 
 %% Effective coupling
-alpha=1.*4.*pi.^2.*2.358e-5;%1.8
+alpha=1.*4.*pi.^2.*2.358e-5;
 %% Parametric drive strength
 epsilon=input('Parametric drive strength (provide 0 or 0.01) =  ')
 %% Thermalnoise strength
 Fth=5e-2;
 %% Differential equations
 f = @(t,y) [y(2); -gammag.*y(2)-(eta./mg).*y(1).*y(1).*y(2)-(beta./mg).*y(1)^3-(OmegaG1.*OmegaG1+(epsilon/mg).*cos(OmegaF.*t)).*y(1)+(alpha./mg).*y(3);
-            y(4); -gammag.*y(4)-(eta./mg).*y(3).*y(3).*y(4)-(beta./mg).*y(3)^3-(OmegaG2.*OmegaG2+(epsilon/mg).*cos(OmegaF.*t+0*pi/4)).*y(3)+(alpha./mg).*y(1)]; % define function f(t,y)
+            y(4); -gammag.*y(4)-(eta./mg).*y(3).*y(3).*y(4)-(beta./mg).*y(3)^3-(OmegaG2.*OmegaG2+(epsilon/mg).*cos(OmegaF.*t+0*pi/4)).*y(3)+(alpha./mg).*y(1)];
 
 %% Initial conditions
 y0 = [1e-15;0;1e-15;0]; 
@@ -57,8 +57,6 @@ for j=1:length(index)
     
      all_Av_peak(j,:)=Av_peak;
      av_tdarray=av_tdarray+tdarray;
-     Noise2=mean(tdarray(:,100:501)')/(6e-13);
-
 end
 av_tdarray=av_tdarray/length(index);
 peak=mean(all_Av_peak);
@@ -67,11 +65,6 @@ peak=mean(all_Av_peak);
 figure(3)
 plot(mul,peak)
 set(gca,'YScale','log')
-
-Mat1=av_tdarray(:,1001:1201);
-frequency=freq(:,1001:1201);
-
-disp('Collect mul (noise strength), frequency and Mat1 (frequency along x axis and noise strength along y axis) ')
 
 %% RK4 SDE function with fourier transform of time series data
 function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
@@ -91,7 +84,6 @@ function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
       k2 = dt*f(t+0.5*dt,y+0.5*k1+0.5*st(i,:));
       k3 = dt*f(t+0.5*dt,y+0.5*k2+0.5*st(i,:));
       k4 = dt*f(t+dt,y+k3+st(i,:));
-%       y = y + dt*f(t,y)+ st(i,:)';
       y = y + (k1+2*k2+2*k3+k4)/6+ st(i,:)';
       t = t + dt;
     
@@ -105,7 +97,7 @@ function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
     
     % PSD
     ffty1= fft(ys(:,1));
-    P2 = abs(ffty1/L);%/CG;
+    P2 = abs(ffty1/L);
     P1 = P2(1:L/2+1);
     P1(2:end-1) = 2*P1(2:end-1);
 end
