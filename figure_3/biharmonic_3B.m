@@ -9,13 +9,12 @@ OmegaF=OmegaG1+OmegaG2;
 %% Damping
 gammag=2.*pi.*22037;
 %% Duffing coefficient and nonlinear damping coefficient
-beta=6.8e15;%5.8e14
-eta= 9.8e7;%9.8e6;
+beta=6.8e15;
+eta= 9.8e7;
 %% Effective coupling
-alpha=8.5*4.*pi.^2.*2.358e-5;%8.5
+alpha=8.5*4.*pi.^2.*2.358e-5;
 %% Parametric drive strength
-epsilon=0.0165;%0
-% epsilon=input('Parametric drive strength (provide 0 or 0.009) =  ')
+epsilon=0.0165;
 %% Thermalnoise strength
 Fth=5e-2;
 %% Differential equations
@@ -48,7 +47,6 @@ function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
   n_matrix=[0 1 0 1];
   Fth = Fth.*n_matrix;
   Fadd = epsilon_p.*n_matrix;
-%   st=sqrt(dt).*Fadd.*randn(N+1,1)*1;
   st=sqrt(dt).*Fth.*randn(N+1,1)+sqrt(dt).*Fadd.*randn(N+1,1);
 
   for i=1:N
@@ -56,12 +54,10 @@ function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
       k2 = dt*f(t+0.5*dt,y+0.5*k1+0.5*st(i,:));
       k3 = dt*f(t+0.5*dt,y+0.5*k2+0.5*st(i,:));
       k4 = dt*f(t+dt,y+k3+st(i,:));
-%       y = y + dt*f(t,y)+ st(i,:)';
       y = y + (k1+2*k2+2*k3+k4)/6+ st(i,:)';
       t = t + dt;
     
-      ts(i+1) = t; ys(i+1,:) = y';   % store y(1),y(2) in row of array ys
-%       var(i)=k1(2);%st(i,2);
+      ts(i+1) = t; ys(i+1,:) = y';
   end
     % frequency
     Fs=1/dt;
@@ -70,7 +66,7 @@ function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
     
     % PSD
     ffty1= fft(ys(:,1));
-    P2 = abs(ffty1/L);%/CG;
+    P2 = abs(ffty1/L);
     P1 = P2(1:L/2+1);
     P1(2:end-1) = 2*P1(2:end-1);
 end
