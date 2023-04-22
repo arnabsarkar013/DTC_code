@@ -19,7 +19,7 @@ epsilon=0.015;
 Fth=5e-2;
 %% Differential equations
 f = @(t,y) [y(2); -gammag.*y(2)-(eta./mg).*y(1).*y(1).*y(2)-(beta./mg).*y(1)^3-(OmegaG1.*OmegaG1+(epsilon/mg).*cos(OmegaF.*t)).*y(1)+(alpha./mg).*y(3);
-            y(4); -gammag.*y(4)-(eta./mg).*y(3).*y(3).*y(4)-(beta./mg).*y(3)^3-(OmegaG2.*OmegaG2+(epsilon/mg).*cos(OmegaF.*t+pi/4)).*y(3)+(alpha./mg).*y(1)]; % define function f(t,y)
+            y(4); -gammag.*y(4)-(eta./mg).*y(3).*y(3).*y(4)-(beta./mg).*y(3)^3-(OmegaG2.*OmegaG2+(epsilon/mg).*cos(OmegaF.*t+pi/4)).*y(3)+(alpha./mg).*y(1)];
 
 %% Initial conditions
 y0 = [1e-15;0;1e-15;0]; 
