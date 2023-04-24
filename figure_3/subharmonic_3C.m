@@ -58,14 +58,18 @@ function [ts,ys,freq,P1] = rk4_sto(f,tv,y0,N,epsilon_p,Fth)
     
       ts(i+1) = t; ys(i+1,:) = y';
   end
-    % frequency
-    Fs=1/dt;
-    L=(length(ts)-1);
-    freq = Fs*(0:(L/2))/L;
-    
-    % PSD
-    ffty1= fft(ys(:,1));
-    P2 = abs(ffty1/L);
-    P1 = P2(1:L/2+1);
-    P1(2:end-1) = 2*P1(2:end-1);
+  
+  %% fourier transforming the time series to get frequency series
+
+  Fs=1/dt;
+  transient=10001; % initial transient data points from time series to remove to get frequency spectrum
+  L=(length(ts)-transient-1);
+  freq = Fs*(0:(L/2))/L;
+
+  %% fourier transforming the time series displacement data 
+  
+  ffty1= fft(ys(transient+1:end,1));
+  P2 = abs(ffty1/L);%/CG;
+  P1 = P2(1:L/2+1);
+  P1(2:end-1) = 2*P1(2:end-1);
 end
